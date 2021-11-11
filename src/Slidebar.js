@@ -6,8 +6,6 @@ import { useStateValue } from './DataLayer';
 
 function Slidebar() {
   const [{ playlists }, dispatch] = useStateValue();
-  console.log(playlists);
-  console.log(useStateValue());
   return (
     <div className="sidebar">
       <img
