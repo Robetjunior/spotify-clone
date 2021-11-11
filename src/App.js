@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import Login from './Login';
-import { getTokenFromUrl } from './Spotify';
+import { getTokenFromResponse } from './Spotify';
 import SpotifyWebApi from 'spotify-web-api-js';
 import Player from './Player';
 import { useStateValue } from './DataLayer';
@@ -12,9 +12,9 @@ function App() {
   const [{ user, token }, dispatch] = useStateValue();
 
   useEffect(() => {
-    const hash = getTokenFromUrl();
+    const hash = getTokenFromResponse();
     window.location.hash = '';
-    const _token = hash.access_token;
+    let _token = hash.access_token;
 
     if (_token) {
       dispatch({
@@ -30,10 +30,15 @@ function App() {
           user: user,
         });
       });
-    }
 
-    console.log(token);
-  }, [dispatch, token]);
+      spotify.getUserPlaylists().then((playlists) => {
+        dispatch({
+          type: 'SET_PLAYLISTS',
+          playlists,
+        });
+      });
+    }
+  }, [token, dispatch]);
   console.log(user);
 
   return (
